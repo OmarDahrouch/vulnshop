@@ -39,9 +39,9 @@ def home():
 @app.get("/users")
 def find_user():
     email = request.args.get("email", "")
-    # FAILLE VOLONTAIRE (A05 Injection) : requête construite par concaténation.
-    query = "SELECT id, email, name FROM users WHERE email = '" + email + "'"
-    rows = db().execute(query).fetchall()
+    # Requête paramétrée : la valeur est transmise séparément du SQL.
+    query = "SELECT id, email, name FROM users WHERE email = ?"
+    rows = db().execute(query, (email,)).fetchall()
     return jsonify([dict(r) for r in rows])
 
 
